@@ -30,9 +30,9 @@ def exportTofile(f_name,t_count,c_votes):
         output_file.write("\n----------------")
 
 def VoteAnalysis(file_name):
-    total_vote_count=0
-    candidate_votes={}
-    f_name, f_ext = os.path.splitext(os.path.basename(file_name))
+    total_vote_count=0 #To count total votes
+    candidate_votes={} #Dictionary to store each candidate's vote count
+    f_name, f_ext = os.path.splitext(os.path.basename(file_name)) # parsing file name to create output for each input file
 
     with open(file_name,newline='',encoding='utf-8') as input_file:
         file_reader=csv.reader(input_file,delimiter=",")
@@ -40,17 +40,21 @@ def VoteAnalysis(file_name):
         for row in file_reader:
             total_vote_count+=1
             if(candidate_votes):
-                if(candidate_votes):
+                #If dictionary is initilze then check vot count is updated for that candidate
+                if(candidate_votes): 
+                        #check if candidate is already available in dictionary. If yes then increase count
                         if (str(row[2].strip()) in candidate_votes):
                             candidate_votes[row[2].strip()]=int(candidate_votes[row[2]])+1
                         else:
+                            #for first occurence initilize count as 1
                             candidate_votes[row[2].strip()]=1
                 else:
+                    #for first occurence initilize count as 1
                     candidate_votes[row[2].strip()]=1       
             else:
                 candidate_votes[row[2].strip()]=1
  
-
+    
     exportTofile(f_name,total_vote_count,candidate_votes)
 ###########################
 ###########################

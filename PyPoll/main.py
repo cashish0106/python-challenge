@@ -1,5 +1,57 @@
 import os,csv
        
+def exportTofile(f_name,t_count,c_votes):
+    with open(os.path.join("Output",f_name+"_result.txt"),"w+") as output_file:
+        winner=""
+        votes=0
+        print("Election Results")
+        print("----------------")
+        print("Total Votes: "+str(t_count))
+        print("----------------")
+        output_file.write("Election Results")
+        output_file.write("\n----------------")
+        output_file.write("\nTotal Votes: "+str(t_count))
+        output_file.write("\n----------------\n")
+
+        for keys,values in c_votes.items():
+            print(keys+": "+str(round(values/t_count*100,1))+"% ("+str(values)+")")
+            output_file.write(keys+": "+str(round(values/t_count*100,1))+"% ("+str(values)+")\n")
+            if(votes > int(values)):
+                votes=votes
+            else:
+                votes=int(values)
+                winner=keys    
+        
+        print("----------------")
+        print("Winner: "+winner)
+        print("----------------")
+        output_file.write("----------------\n")
+        output_file.write("Winner: "+winner)
+        output_file.write("\n----------------")
+
+def VoteAnalysis(file_name):
+    total_vote_count=0
+    candidate_votes={}
+    f_name, f_ext = os.path.splitext(os.path.basename(file_name))
+
+    with open(file_name,newline='',encoding='utf-8') as input_file:
+        file_reader=csv.reader(input_file,delimiter=",")
+        next(file_reader, None)
+        for row in file_reader:
+            total_vote_count+=1
+            if(candidate_votes):
+                if(candidate_votes):
+                        if (str(row[2].strip()) in candidate_votes):
+                            candidate_votes[row[2].strip()]=int(candidate_votes[row[2]])+1
+                        else:
+                            candidate_votes[row[2].strip()]=1
+                else:
+                    candidate_votes[row[2].strip()]=1       
+            else:
+                candidate_votes[row[2].strip()]=1
+ 
+
+    exportTofile(f_name,total_vote_count,candidate_votes)
 ###########################
 ###########################
 ###########################
@@ -7,28 +59,7 @@ import os,csv
 ###########################
 ###########################
 ###########################
-def VoteAnalysis(file_name):
-    VoteCount=0
-    Candidates=[]
-    lcandidate=[]
-    lcounty=[]
 
-    with open(file_name,newline='',encoding='utf-8') as input_file:
-        file_reader=csv.reader(input_file,delimiter=",")
-        next(file_reader, None)
-        for row in file_reader:
-            VoteCount+=1
-            County=row[1]
-            Candidate=row[2]
-            Candidates.append([County,Candidate])  
-            lcandidate.append(row[2])
-            lcounty.append(row[1])
-
-
-    #print(Candidates)
-    for can,con in zip(lcandidate,lcounty):
-        print(can+" "+con)
-        
 for root, dirs, files in os.walk("raw_data"):
     for file in files:
         if file.endswith(".csv"):
